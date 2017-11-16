@@ -1,32 +1,34 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Matcher
 {
 	private static List<Node> matchLoops = new ArrayList();
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws FileNotFoundException, IOException
 	{
 		List<String> names = pullInMatches(args[0]);
 		generateMatchLoops(names);
 		printMatchLoops();
 	}
 
-	private static List<String> pullInMatches(String filepath)
+	private static List<String> pullInMatches(String filepath) throws FileNotFoundException, IOException
 	{
+		String line = null;
 		List<String> names = new ArrayList();
-
-		names.add("Test0");
-		names.add("Test1");
-		names.add("Test2");
-		names.add("Test3");
-		names.add("Test4");
-		names.add("Test5");
-		names.add("Test6");
-		names.add("Test7");
-		names.add("Test8");
-		names.add("Test9");
+		BufferedReader br = new BufferedReader(new FileReader(filepath));
+		
+		while((line = br.readLine()) != null)
+		{
+			//debug logging
+			//System.out.println("Adding " + line + " to match list");
+			names.add(line.trim());
+		}
 
 		return names;
 	}
@@ -43,7 +45,8 @@ public class Matcher
 			Node originalGifter = new Node(names.get(rand.nextInt(names.size())));
 			Node currentGifter = originalGifter;
 
-			System.out.println("Original Gifter: " + originalGifter.name);
+			//debug logging
+			//System.out.println("Original Gifter: " + originalGifter.name);
 
 			while(!loopClosed)
 			{
@@ -68,7 +71,8 @@ public class Matcher
 					}
 				}
 
-				System.out.println("Next giftee: " + names.get(giftee));
+				//debug logging
+				//System.out.println("Next giftee: " + names.get(giftee));
 
 				//Set giftee node on the current node and remove from list of choices
 				Node nextGifter = new Node(names.get(giftee));
@@ -78,7 +82,8 @@ public class Matcher
 
 				//check for closed loop
 				loopClosed = currentGifter.name.equals(originalGifter.name);
-				System.out.println("Loop closed: " + loopClosed);
+				//debug logging
+				//System.out.println("Loop closed: " + loopClosed);
 			}
 
 			//Once a loop is generated, add it to the matchLoops
