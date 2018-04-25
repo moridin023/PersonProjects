@@ -1,5 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Random;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,6 +11,7 @@ import java.io.IOException;
 public class Matcher
 {
 	private static List<Node> matchLoops = new ArrayList();
+	private static Map<String, String[]> nonMatches = new HashMap();
 
 	public static void main(String[] args) throws FileNotFoundException, IOException
 	{
@@ -27,7 +30,16 @@ public class Matcher
 		{
 			//debug logging
 			//System.out.println("Adding " + line + " to match list");
-			names.add(line.trim());
+			String[] matchInfo = line.split(":");
+			String name = matchInfo[0];
+			if(matchInfo.length > 1)
+			{
+				//pull out any people match shouldn't match with
+				String[] matcherNonMatches = matchInfo[1].split(",");
+				nonMatches.put(name, matcherNonMatches);
+			}
+
+			names.add(name.trim());
 		}
 
 		return names;
